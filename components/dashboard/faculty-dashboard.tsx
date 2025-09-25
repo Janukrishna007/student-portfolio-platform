@@ -6,85 +6,224 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/lib/auth"
-import type { Achievement, Faculty, ApprovalWorkflow } from "@/lib/types"
-import { mockFaculty, mockPendingAchievements, mockApprovalWorkflows } from "@/lib/mock-data"
-import { AchievementReviewCard } from "./achievement-review-card"
-import { ApprovalHistoryCard } from "./approval-history-card"
-import { FacultyStats } from "./faculty-stats"
+import type { Achievement, Faculty, ApprovalWorkflow, Certificate, Student } from "@/lib/types"
+import { mockFaculty, mockPendingAchievements, mockApprovalWorkflows, mockStudents } from "@/lib/mock-data"
+import { StudentInsights } from "@/components/ai/student-insights"
+import { MentorshipTools } from "@/components/ai/mentorship-tools"
+import { EnhancedCertificateReview } from "@/components/ai/enhanced-certificate-review"
 import {
   Search,
   Bell,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   GraduationCap,
   LogOut,
   BarChart3,
-  User,
-  BookOpen,
-  Trophy,
-  Users,
+  Calendar as CalendarIcon,
+  Plus,
   MessageSquare,
-  Briefcase,
-  Settings,
-  CheckCircle,
-  Clock,
+  BookOpen,
+  Users,
   FileText,
+  School,
+  Brain,
+  Target,
+  Award,
 } from "lucide-react"
+
+// Mock certificate data for faculty review
+const mockCertificates: (Certificate & { student: Student })[] = [
+  {
+    id: "1",
+    student_id: "1",
+    title: "Google Course UI / UX Certificate",
+    issuer: "Google",
+    issue_date: "2024-08-15",
+    category: "professional",
+    status: "pending",
+    created_at: "2024-08-16T10:00:00Z",
+    updated_at: "2024-08-16T10:00:00Z",
+    student: {
+      id: "1",
+      user_id: "1",
+      student_id: "CS2021001",
+      first_name: "Aleena Ida",
+      last_name: "Ignatius",
+      department: "Computer Science",
+      year: 3,
+      semester: 6,
+      created_at: "2024-01-15T10:00:00Z",
+      updated_at: "2024-01-15T10:00:00Z",
+    }
+  },
+  {
+    id: "2",
+    student_id: "1",
+    title: "Google Course UI / UX Certificate",
+    issuer: "Google",
+    issue_date: "2024-08-10",
+    category: "professional",
+    status: "pending",
+    created_at: "2024-08-11T10:00:00Z",
+    updated_at: "2024-08-11T10:00:00Z",
+    student: {
+      id: "1",
+      user_id: "1",
+      student_id: "CS2021001",
+      first_name: "Aleena Ida",
+      last_name: "Ignatius",
+      department: "Computer Science",
+      year: 3,
+      semester: 6,
+      created_at: "2024-01-15T10:00:00Z",
+      updated_at: "2024-01-15T10:00:00Z",
+    }
+  },
+  {
+    id: "3",
+    student_id: "1",
+    title: "Google Course UI / UX Certificate",
+    issuer: "Google",
+    issue_date: "2024-08-05",
+    category: "professional",
+    status: "pending",
+    created_at: "2024-08-06T10:00:00Z",
+    updated_at: "2024-08-06T10:00:00Z",
+    student: {
+      id: "1",
+      user_id: "1",
+      student_id: "CS2021001",
+      first_name: "Aleena Ida",
+      last_name: "Ignatius",
+      department: "Computer Science",
+      year: 3,
+      semester: 6,
+      created_at: "2024-01-15T10:00:00Z",
+      updated_at: "2024-01-15T10:00:00Z",
+    }
+  },
+  {
+    id: "4",
+    student_id: "1",
+    title: "Google Course UI / UX Certificate",
+    issuer: "Google",
+    issue_date: "2024-08-01",
+    category: "professional",
+    status: "pending",
+    created_at: "2024-08-02T10:00:00Z",
+    updated_at: "2024-08-02T10:00:00Z",
+    student: {
+      id: "1",
+      user_id: "1",
+      student_id: "CS2021001",
+      first_name: "Aleena Ida",
+      last_name: "Ignatius",
+      department: "Computer Science",
+      year: 3,
+      semester: 6,
+      created_at: "2024-01-15T10:00:00Z",
+      updated_at: "2024-01-15T10:00:00Z",
+    }
+  },
+  {
+    id: "5",
+    student_id: "1",
+    title: "Google Course UI / UX Certificate",
+    issuer: "Google",
+    issue_date: "2024-07-28",
+    category: "professional",
+    status: "pending",
+    created_at: "2024-07-29T10:00:00Z",
+    updated_at: "2024-07-29T10:00:00Z",
+    student: {
+      id: "1",
+      user_id: "1",
+      student_id: "CS2021001",
+      first_name: "Aleena Ida",
+      last_name: "Ignatius",
+      department: "Computer Science",
+      year: 3,
+      semester: 6,
+      created_at: "2024-01-15T10:00:00Z",
+      updated_at: "2024-01-15T10:00:00Z",
+    }
+  },
+  {
+    id: "6",
+    student_id: "1",
+    title: "Google Course UI / UX Certificate",
+    issuer: "Google",
+    issue_date: "2024-07-25",
+    category: "professional",
+    status: "pending",
+    created_at: "2024-07-26T10:00:00Z",
+    updated_at: "2024-07-26T10:00:00Z",
+    student: {
+      id: "1",
+      user_id: "1",
+      student_id: "CS2021001",
+      first_name: "Aleena Ida",
+      last_name: "Ignatius",
+      department: "Computer Science",
+      year: 3,
+      semester: 6,
+      created_at: "2024-01-15T10:00:00Z",
+      updated_at: "2024-01-15T10:00:00Z",
+    }
+  }
+]
 
 export function FacultyDashboard() {
   const { user, logout } = useAuth()
   const [faculty, setFaculty] = useState<Faculty | null>(null)
-  const [pendingAchievements, setPendingAchievements] = useState<Achievement[]>([])
-  const [approvalHistory, setApprovalHistory] = useState<ApprovalWorkflow[]>([])
+  const [pendingCertificates, setPendingCertificates] = useState<(Certificate & { student: Student })[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeView, setActiveView] = useState<
-    | "dashboard"
-    | "pending"
-    | "history"
-    | "analytics"
-    | "students"
-    | "reports"
-    | "settings"
-  >("dashboard")
+  const [currentDate] = useState(new Date())
+  const [activeView, setActiveView] = useState<"dashboard" | "certificates" | "insights" | "mentorship">("dashboard")
 
   useEffect(() => {
     // Mock data loading - in real app, this would fetch from Supabase
     const facultyData = mockFaculty.find((f) => f.user_id === user?.id)
-    const pendingReviews = mockPendingAchievements.filter((a) => a.verification_status === "pending")
-    const workflows = mockApprovalWorkflows.filter((w) => w.faculty_id === facultyData?.id)
-
+    
     setFaculty(facultyData || null)
-    setPendingAchievements(pendingReviews)
-    setApprovalHistory(workflows)
+    setPendingCertificates(mockCertificates)
     setLoading(false)
   }, [user])
 
-  const handleApproval = (achievementId: string, status: "approved" | "rejected", comments: string) => {
-    // Update achievement status
-    setPendingAchievements((prev) =>
-      prev
-        .map((achievement) =>
-          achievement.id === achievementId ? { ...achievement, verification_status: status } : achievement,
-        )
-        .filter((achievement) => achievement.id !== achievementId),
+  const handleCertificateApproval = (certificateId: string, status: "approved" | "rejected") => {
+    setPendingCertificates((prev) =>
+      prev.filter((cert) => cert.id !== certificateId)
     )
+    // In real implementation, this would update the database
+  }
 
-    // Add to approval history
-    const newWorkflow: ApprovalWorkflow = {
-      id: Date.now().toString(),
-      achievement_id: achievementId,
-      faculty_id: faculty?.id || "1",
-      status,
-      comments,
-      reviewed_at: new Date().toISOString(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+  const generateCalendar = () => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const startDate = new Date(firstDay)
+    startDate.setDate(startDate.getDate() - firstDay.getDay())
+    
+    const days = []
+    for (let i = 0; i < 42; i++) {
+      const date = new Date(startDate)
+      date.setDate(date.getDate() + i)
+      days.push(date)
     }
+    
+    return days
+  }
 
-    setApprovalHistory((prev) => [newWorkflow, ...prev])
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
   }
 
   if (loading) {
@@ -106,94 +245,47 @@ export function FacultyDashboard() {
         <div className="w-64 bg-gradient-to-b from-purple-600 to-purple-700 min-h-screen p-6 flex flex-col">
           <div className="mb-8">
             <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-6 p-3">
-              <Image
-                src="/images/logo.png"
-                alt="Logo"
-                width={40}
-                height={40}
-                className="w-full h-full object-contain"
-              />
+              <School className="w-10 h-10 text-white" />
             </div>
           </div>
 
           {/* Navigation Menu */}
           <nav className="flex-1 space-y-1">
-            <div
+            <div 
               className={`flex items-center text-sm font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer ${
-                activeView === "dashboard"
-                  ? "text-white bg-white/20"
-                  : "text-white/70 hover:bg-white/10"
+                activeView === "dashboard" ? "text-white bg-white/20" : "text-white/70 hover:bg-white/10"
               }`}
               onClick={() => setActiveView("dashboard")}
             >
               <BarChart3 className="w-4 h-4 mr-3" />
               Dashboard
             </div>
-            <div
+            <div 
               className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
-                activeView === "pending"
-                  ? "text-white bg-white/20 font-medium"
-                  : "text-white/70 hover:bg-white/10"
+                activeView === "certificates" ? "text-white bg-white/20 font-medium" : "text-white/70 hover:bg-white/10"
               }`}
-              onClick={() => setActiveView("pending")}
+              onClick={() => setActiveView("certificates")}
             >
-              <Clock className="w-4 h-4 mr-3" />
-              Pending Reviews
+              <Award className="w-4 h-4 mr-3" />
+              Certificate Review
             </div>
-            <div
+            <div 
               className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
-                activeView === "history"
-                  ? "text-white bg-white/20 font-medium"
-                  : "text-white/70 hover:bg-white/10"
+                activeView === "insights" ? "text-white bg-white/20 font-medium" : "text-white/70 hover:bg-white/10"
               }`}
-              onClick={() => setActiveView("history")}
+              onClick={() => setActiveView("insights")}
             >
-              <CheckCircle className="w-4 h-4 mr-3" />
-              Review History
+              <Brain className="w-4 h-4 mr-3" />
+              Student Insights
             </div>
-            <div
+            <div 
               className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
-                activeView === "analytics"
-                  ? "text-white bg-white/20 font-medium"
-                  : "text-white/70 hover:bg-white/10"
+                activeView === "mentorship" ? "text-white bg-white/20 font-medium" : "text-white/70 hover:bg-white/10"
               }`}
-              onClick={() => setActiveView("analytics")}
+              onClick={() => setActiveView("mentorship")}
             >
-              <Trophy className="w-4 h-4 mr-3" />
-              Analytics
-            </div>
-            <div
-              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
-                activeView === "students"
-                  ? "text-white bg-white/20 font-medium"
-                  : "text-white/70 hover:bg-white/10"
-              }`}
-              onClick={() => setActiveView("students")}
-            >
-              <Users className="w-4 h-4 mr-3" />
-              Students
-            </div>
-            <div
-              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
-                activeView === "reports"
-                  ? "text-white bg-white/20 font-medium"
-                  : "text-white/70 hover:bg-white/10"
-              }`}
-              onClick={() => setActiveView("reports")}
-            >
-              <FileText className="w-4 h-4 mr-3" />
-              Reports
-            </div>
-            <div
-              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
-                activeView === "settings"
-                  ? "text-white bg-white/20 font-medium"
-                  : "text-white/70 hover:bg-white/10"
-              }`}
-              onClick={() => setActiveView("settings")}
-            >
-              <Settings className="w-4 h-4 mr-3" />
-              Settings
+              <Target className="w-4 h-4 mr-3" />
+              Mentorship Tools
             </div>
           </nav>
 
@@ -228,19 +320,16 @@ export function FacultyDashboard() {
                 <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-xs">
-                    {faculty.first_name.charAt(0)}{faculty.last_name.charAt(0)}
-                  </span>
-                </div>
+                <Avatar className="w-10 h-10">
+                  <AvatarImage src="/avatar-placeholder.jpg" />
+                  <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-white text-sm font-semibold">
+                    MF
+                  </AvatarFallback>
+                </Avatar>
                 <div>
-                  <div className="font-semibold text-gray-900 text-sm">
-                    {faculty.first_name} {faculty.last_name}
-                  </div>
-                  <div className="text-xs text-gray-600">{faculty.designation}</div>
-                  <div className="text-xs text-gray-500">
-                    {faculty.department}
-                  </div>
+                  <div className="font-semibold text-gray-900 text-sm">Mercelin Francis</div>
+                  <div className="text-xs text-gray-600">Assistant Professor</div>
+                  <div className="text-xs text-gray-500">Marian Engineering College</div>
                 </div>
               </div>
             </div>
@@ -251,29 +340,17 @@ export function FacultyDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="z-10">
-                  <p className="text-purple-100 mb-1 text-sm">
-                    {new Date().toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </p>
-                  <h1 className="text-2xl font-bold mb-2">
-                    Welcome back, {faculty.first_name}!
-                  </h1>
-                  <p className="text-purple-100 text-sm">
-                    Manage student achievements and reviews from your faculty portal
-                  </p>
+                  <p className="text-purple-100 mb-1 text-sm">{formatDate(currentDate)}</p>
+                  <h1 className="text-2xl font-bold mb-2">Welcome back, Aleena!</h1>
+                  <p className="text-purple-100 text-sm">Always stay updated in your student portal</p>
                 </div>
                 <div className="relative">
-                  {/* Decorative elements */}
                   <div className="absolute -top-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
                   <div className="absolute top-2 right-8 w-12 h-12 bg-yellow-400/80 rounded-lg transform rotate-12"></div>
                   <div className="absolute top-8 right-2 w-8 h-8 bg-blue-400/80 rounded"></div>
                   <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
                     <GraduationCap className="w-12 h-12 text-white/90" />
                   </div>
-                  {/* Small decorative dots */}
                   <div className="absolute -bottom-2 right-12 w-2 h-2 bg-green-400 rounded-full"></div>
                   <div className="absolute top-0 right-16 w-2 h-2 bg-pink-300 rounded-full"></div>
                   <div className="absolute bottom-4 right-20 w-2 h-2 bg-blue-300 rounded-full"></div>
@@ -282,85 +359,185 @@ export function FacultyDashboard() {
             </CardContent>
           </Card>
 
-          {/* Content based on active view */}
+          {/* Main Dashboard Content */}
           {activeView === "dashboard" && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left Column */}
+              {/* Left Column - My Students */}
               <div className="lg:col-span-2 space-y-6">
-                {/* Faculty Stats */}
-                <FacultyStats
-                  pendingCount={pendingAchievements.length}
-                  approvedCount={approvalHistory.filter((w) => w.status === "approved").length}
-                  rejectedCount={approvalHistory.filter((w) => w.status === "rejected").length}
-                  totalReviewed={approvalHistory.length}
-                />
-
-                {/* Recent Reviews */}
                 <Card className="shadow-sm">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base font-semibold">
-                      Recent Reviews
-                    </CardTitle>
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                        <BookOpen className="w-6 h-6 text-white" />
+                      </div>
+                      <CardTitle className="text-lg font-semibold">
+                        My Students
+                      </CardTitle>
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      {approvalHistory.slice(0, 3).map((workflow) => (
-                        <div key={workflow.id} className="flex items-center justify-between py-2">
-                          <div className="flex items-center gap-3">
-                            <div className={`w-2 h-2 rounded-full ${
-                              workflow.status === "approved" ? "bg-green-500" : "bg-red-500"
-                            }`}></div>
-                            <span className="text-sm font-medium">Achievement #{workflow.achievement_id}</span>
-                          </div>
-                          <Badge className={`text-xs ${
-                            workflow.status === "approved" 
-                              ? "bg-green-100 text-green-700 hover:bg-green-100" 
-                              : "bg-red-100 text-red-700 hover:bg-red-100"
-                          }`}>
-                            {workflow.status}
-                          </Badge>
-                        </div>
-                      ))}
+                    <div className="text-center py-8">
+                      <div className="w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                        <Users className="w-12 h-12 text-white" />
+                      </div>
+                      <p className="text-gray-600 text-sm mb-4">View detailed student insights and analytics</p>
+                      <Button 
+                        onClick={() => setActiveView("insights")}
+                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                      >
+                        <Brain className="w-4 h-4 mr-2" />
+                        View Student Insights
+                      </Button>
                     </div>
+                  </CardContent>
+                </Card>
+
+                {/* Add Upcoming Event */}
+                <Card className="shadow-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-xl flex items-center justify-center">
+                        <CalendarIcon className="w-6 h-6 text-white" />
+                      </div>
+                      <CardTitle className="text-lg font-semibold">
+                        Add Upcoming Event
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Create and publish academic or extracurricular events for students to join.
+                    </p>
+                    <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create Event
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Post Notice */}
+                <Card className="shadow-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center">
+                        <MessageSquare className="w-6 h-6 text-white" />
+                      </div>
+                      <CardTitle className="text-lg font-semibold">
+                        Post Notice
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Share important announcements and updates with your students.
+                    </p>
+                    <Button className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Create Notice
+                    </Button>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Right Column */}
               <div className="space-y-6">
-                {/* Pending Count */}
-                <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-sm">
-                  <CardContent className="p-6">
-                    <div className="text-center">
-                      <h3 className="text-base font-semibold mb-2">
-                        Pending Reviews
-                      </h3>
-                      <div className="text-3xl font-bold">{pendingAchievements.length}</div>
+                {/* To Be Approved */}
+                <Card className="shadow-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg font-semibold">
+                        To Be Approved ({pendingCertificates.length})
+                      </CardTitle>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setActiveView("certificates")}
+                      >
+                        View All
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {pendingCertificates.slice(0, 6).map((certificate) => (
+                        <div key={certificate.id} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50">
+                          <Avatar className="w-8 h-8">
+                            <AvatarImage src="/student-avatar.jpg" />
+                            <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xs">
+                              AI
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm text-gray-900">
+                              {certificate.student.first_name} {certificate.student.last_name}
+                            </p>
+                            <p className="text-xs text-gray-600 truncate">
+                              {certificate.title}
+                            </p>
+                            <p className="text-xs text-blue-600 underline cursor-pointer hover:text-blue-800">
+                              View →
+                            </p>
+                          </div>
+                          <div className="flex gap-1">
+                            <Button 
+                              size="sm" 
+                              className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1 rounded-full h-6"
+                              onClick={() => handleCertificateApproval(certificate.id, "approved")}
+                            >
+                              Approve
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="text-gray-600 border-gray-300 text-xs px-3 py-1 rounded-full h-6"
+                              onClick={() => handleCertificateApproval(certificate.id, "rejected")}
+                            >
+                              Reject
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Quick Actions */}
+                {/* Profile Info Card */}
                 <Card className="shadow-sm">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base font-semibold">
-                      Quick Actions
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <Button 
-                      className="w-full bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-lg text-sm h-8"
-                      onClick={() => setActiveView("pending")}
-                    >
-                      Review Achievements
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full text-sm h-8"
-                      onClick={() => setActiveView("reports")}
-                    >
-                      Generate Report
-                    </Button>
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <Avatar className="w-20 h-20 mx-auto mb-4">
+                        <AvatarImage src="/faculty-avatar.jpg" />
+                        <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-white text-xl">
+                          MF
+                        </AvatarFallback>
+                      </Avatar>
+                      <h3 className="font-bold text-lg text-gray-900">Mercelin Francis</h3>
+                      <p className="text-sm text-gray-600 mb-2">Assistant Professor</p>
+                      <p className="text-sm text-gray-500 mb-4">Marian Engineering College</p>
+                      
+                      {/* Skill Tags */}
+                      <div className="flex flex-wrap gap-2 justify-center mb-4">
+                        <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">
+                          Web development
+                        </Badge>
+                        <Badge className="bg-purple-100 text-purple-700 border-purple-200 text-xs">
+                          UI/X
+                        </Badge>
+                        <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200 text-xs">
+                          Filmography
+                        </Badge>
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">
+                          Video Editing
+                        </Badge>
+                        <Badge className="bg-gray-100 text-gray-700 border-gray-200 text-xs">
+                          Painting
+                        </Badge>
+                      </div>
+                      
+                      <Button className="bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-lg w-full">
+                        Edit Profile
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -372,7 +549,7 @@ export function FacultyDashboard() {
                         <ChevronLeft className="w-4 h-4 text-gray-400" />
                       </button>
                       <span className="font-semibold text-sm">
-                        {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                        {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                       </span>
                       <button aria-label="Next month">
                         <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -381,24 +558,19 @@ export function FacultyDashboard() {
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-7 gap-1 text-center text-xs">
-                      <div className="text-gray-500 font-medium py-1">S</div>
-                      <div className="text-gray-500 font-medium py-1">M</div>
-                      <div className="text-gray-500 font-medium py-1">T</div>
-                      <div className="text-gray-500 font-medium py-1">W</div>
-                      <div className="text-gray-500 font-medium py-1">T</div>
-                      <div className="text-gray-500 font-medium py-1">F</div>
-                      <div className="text-gray-500 font-medium py-1">S</div>
-
-                      {Array.from({ length: 35 }, (_, i) => {
-                        const day = i - 6;
-                        const isToday = day === new Date().getDate();
+                      {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+                        <div key={day} className="text-gray-500 font-medium py-2">{day}</div>
+                      ))}
+                      {generateCalendar().map((date, index) => {
+                        const isCurrentMonth = date.getMonth() === currentDate.getMonth()
+                        const isToday = date.toDateString() === new Date().toDateString()
                         return (
-                          <div key={i} className={`py-1 ${
-                            day <= 0 || day > 31 ? "text-gray-400" : ""
-                          } ${isToday ? "bg-purple-600 text-white rounded-full w-5 h-5 flex items-center justify-center mx-auto" : ""}`}>
-                            {day > 0 && day <= 31 ? day : ""}
+                          <div key={index} className={`py-2 text-xs ${
+                            !isCurrentMonth ? "text-gray-400" : ""
+                          } ${isToday ? "bg-purple-600 text-white rounded-full w-6 h-6 flex items-center justify-center mx-auto" : ""}`}>
+                            {date.getDate()}
                           </div>
-                        );
+                        )
                       })}
                     </div>
                   </CardContent>
@@ -407,154 +579,52 @@ export function FacultyDashboard() {
             </div>
           )}
 
-          {activeView === "pending" && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Achievements Awaiting Review</h2>
-                <Button variant="outline">Bulk Actions</Button>
-              </div>
-
-              <div className="grid gap-4">
-                {pendingAchievements.length === 0 ? (
-                  <Card>
-                    <CardContent className="pt-6 text-center">
-                      <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-                      </div>
-                      <p className="text-muted-foreground">All caught up!</p>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        No achievements pending your review at the moment.
-                      </p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  pendingAchievements.map((achievement) => (
-                    <AchievementReviewCard key={achievement.id} achievement={achievement} onApproval={handleApproval} />
-                  ))
-                )}
-              </div>
-            </div>
+          {/* Certificate Review View */}
+          {activeView === "certificates" && (
+            <EnhancedCertificateReview
+              certificates={pendingCertificates.map(cert => ({
+                id: cert.id,
+                student: {
+                  id: cert.student.id,
+                  name: `${cert.student.first_name} ${cert.student.last_name}`,
+                  studentId: cert.student.student_id,
+                  department: cert.student.department,
+                  year: cert.student.year
+                },
+                title: cert.title,
+                issuer: cert.issuer,
+                issueDate: cert.issue_date,
+                category: cert.category,
+                skills: ['UI Design', 'UX Research', 'Prototyping'], // Mock skills
+                status: cert.status,
+                submittedAt: cert.created_at
+              }))}
+              onApprove={(id, feedback) => {
+                console.log('Approved:', id, feedback)
+                handleCertificateApproval(id, "approved")
+              }}
+              onReject={(id, reason) => {
+                console.log('Rejected:', id, reason)
+                handleCertificateApproval(id, "rejected")
+              }}
+              onRequestMoreInfo={(id, message) => {
+                console.log('Requested more info:', id, message)
+              }}
+            />
           )}
 
-          {activeView === "history" && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Review History</h2>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    Filter
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Export
-                  </Button>
-                </div>
-              </div>
-
-              <div className="grid gap-4">
-                {approvalHistory.length === 0 ? (
-                  <Card>
-                    <CardContent className="pt-6 text-center">
-                      <p className="text-muted-foreground">No review history available.</p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  approvalHistory.map((workflow) => <ApprovalHistoryCard key={workflow.id} workflow={workflow} />)
-                )}
-              </div>
-            </div>
+          {/* Student Insights View */}
+          {activeView === "insights" && (
+            <StudentInsights
+              onRecommendCourse={(studentId, course) => {
+                console.log('Recommending course:', course, 'to student:', studentId)
+              }}
+            />
           )}
 
-          {activeView === "analytics" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Review Analytics</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Review Performance</CardTitle>
-                    <CardDescription>Your review activity this month</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Average Review Time</span>
-                        <span className="font-medium">2.3 days</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Reviews This Month</span>
-                        <span className="font-medium">{approvalHistory.length}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Approval Rate</span>
-                        <span className="font-medium">
-                          {approvalHistory.length > 0
-                            ? Math.round(
-                                (approvalHistory.filter((w) => w.status === "approved").length / approvalHistory.length) *
-                                  100,
-                              )
-                            : 0}
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Category Distribution</CardTitle>
-                    <CardDescription>Types of achievements reviewed</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {["certification", "competition", "leadership", "publication"].map((category) => (
-                        <div key={category} className="flex items-center justify-between">
-                          <Badge variant="outline" className="capitalize">
-                            {category}
-                          </Badge>
-                          <span className="text-sm font-medium">
-                            {mockPendingAchievements.filter((a) => a.category === category).length}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          )}
-
-          {activeView === "students" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Student Management</h2>
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <p className="text-muted-foreground">Student management features coming soon...</p>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {activeView === "reports" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Reports & Analytics</h2>
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <p className="text-muted-foreground">Report generation features coming soon...</p>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {activeView === "settings" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Settings</h2>
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <p className="text-muted-foreground">Settings panel coming soon...</p>
-                </CardContent>
-              </Card>
-            </div>
+          {/* Mentorship Tools View */}
+          {activeView === "mentorship" && (
+            <MentorshipTools />
           )}
         </div>
       </div>
