@@ -23,7 +23,7 @@ import {
   Eye,
 } from "lucide-react";
 
-type Certificate = Database['public']['Tables']['certificates']['Row'];
+type Certificate = Database["public"]["Tables"]["certificates"]["Row"];
 
 interface PortfolioProps {
   onBack: () => void;
@@ -47,10 +47,11 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
   useEffect(() => {
     const loadCertificates = async () => {
       if (!student?.id) return;
-      
+
       setLoadingCertificates(true);
       try {
-        const userCertificates = await certificateService.getCertificatesByStudent(student.id);
+        const userCertificates =
+          await certificateService.getCertificatesByStudent(student.id);
         setCertificates(userCertificates);
       } catch (error) {
         console.error("Failed to load certificates:", error);
@@ -66,9 +67,10 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
     // Reload certificates after successful upload
     const loadCertificates = async () => {
       if (!student?.id) return;
-      
+
       try {
-        const userCertificates = await certificateService.getCertificatesByStudent(student.id);
+        const userCertificates =
+          await certificateService.getCertificatesByStudent(student.id);
         setCertificates(userCertificates);
       } catch (error) {
         console.error("Failed to reload certificates:", error);
@@ -80,33 +82,43 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
 
   const handleCertificateView = (certificate: Certificate) => {
     if (certificate.certificate_url) {
-      window.open(certificate.certificate_url, '_blank');
+      window.open(certificate.certificate_url, "_blank");
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'verified':
-        return <Badge className="bg-green-100 text-green-700 text-xs">Verified</Badge>;
-      case 'rejected':
-        return <Badge className="bg-red-100 text-red-700 text-xs">Rejected</Badge>;
+      case "verified":
+        return (
+          <Badge className="bg-green-100 text-green-700 text-xs">
+            Verified
+          </Badge>
+        );
+      case "rejected":
+        return (
+          <Badge className="bg-red-100 text-red-700 text-xs">Rejected</Badge>
+        );
       default:
-        return <Badge className="bg-yellow-100 text-yellow-700 text-xs">Pending</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-700 text-xs">
+            Pending
+          </Badge>
+        );
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'academic':
-        return 'text-blue-600';
-      case 'professional':
-        return 'text-purple-600';
-      case 'skill':
-        return 'text-green-600';
-      case 'achievement':
-        return 'text-orange-600';
+      case "academic":
+        return "text-blue-600";
+      case "professional":
+        return "text-purple-600";
+      case "skill":
+        return "text-green-600";
+      case "achievement":
+        return "text-orange-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
@@ -302,15 +314,19 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
                   Upload
                 </Button>
               </div>
-              
+
               {loadingCertificates ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="text-sm text-gray-500">Loading certificates...</div>
+                  <div className="text-sm text-gray-500">
+                    Loading certificates...
+                  </div>
                 </div>
               ) : certificates.length === 0 ? (
                 <div className="text-center py-8">
                   <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-sm text-gray-500 mb-4">No certificates uploaded yet</p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    No certificates uploaded yet
+                  </p>
                   <Button
                     variant="outline"
                     size="sm"
@@ -336,9 +352,14 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
                           {getStatusBadge(cert.status)}
                         </div>
                         <p className="text-xs text-gray-600 mb-1">
-                          {cert.issuer} • {new Date(cert.issue_date).toLocaleDateString()}
+                          {cert.issuer} •{" "}
+                          {new Date(cert.issue_date).toLocaleDateString()}
                         </p>
-                        <p className={`text-xs font-medium capitalize ${getCategoryColor(cert.category)}`}>
+                        <p
+                          className={`text-xs font-medium capitalize ${getCategoryColor(
+                            cert.category
+                          )}`}
+                        >
                           {cert.category}
                         </p>
                       </div>

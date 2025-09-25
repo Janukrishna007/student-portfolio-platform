@@ -22,7 +22,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Upload, FileText, AlertCircle, CheckCircle } from "lucide-react";
 import { storageManager } from "@/lib/storage";
-import { certificateService, type CertificateData } from "@/lib/certificate-service";
+import {
+  certificateService,
+  type CertificateData,
+} from "@/lib/certificate-service";
 
 interface CertificateUploadDialogProps {
   isOpen: boolean;
@@ -52,16 +55,23 @@ export function CertificateUploadDialog({
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "application/pdf",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        setError('Invalid file type. Only JPEG, PNG, and PDF files are allowed.');
+        setError(
+          "Invalid file type. Only JPEG, PNG, and PDF files are allowed."
+        );
         return;
       }
 
       // Validate file size (5MB limit)
       const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        setError('File size too large. Maximum size is 5MB.');
+        setError("File size too large. Maximum size is 5MB.");
         return;
       }
 
@@ -71,9 +81,9 @@ export function CertificateUploadDialog({
   };
 
   const handleInputChange = (field: keyof CertificateData, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
     setError("");
   };
@@ -102,60 +112,52 @@ export function CertificateUploadDialog({
     if (!validateForm()) return;
 
     setUploading(true);
-    setUploadProgress("Creating certificate entry...");
+    setUploadProgress("Preparing upload...");
 
     try {
-      // First create the certificate entry in database
       const certificateData: CertificateData = {
         student_id: studentId,
         title: formData.title!,
         issuer: formData.issuer!,
         issue_date: formData.issue_date!,
         category: formData.category!,
-        status: "pending"
+        status: "pending",
       };
 
-      const certificate = await certificateService.createCertificate(certificateData);
-      
-      if (!certificate) {
-        throw new Error("Failed to create certificate entry");
-      }
-
-      // Upload file if provided
       if (selectedFile) {
-        setUploadProgress("Uploading certificate file...");
-        
-        const uploadResult = await storageManager.uploadCertificate(
-          selectedFile,
-          studentId,
-          certificate.id
-        );
+        // Upload certificate with file using the enhanced service
+        setUploadProgress("Uploading certificate with file...");
 
-        if (uploadResult.error) {
-          throw new Error(uploadResult.error);
+        const { certificate, error } =
+          await certificateService.uploadCertificateWithFile(
+            certificateData,
+            selectedFile
+          );
+
+        if (error || !certificate) {
+          throw new Error(error || "Failed to upload certificate with file");
         }
+      } else {
+        // Create certificate entry without file
+        setUploadProgress("Creating certificate entry...");
 
-        // Update certificate with file URL
-        setUploadProgress("Updating certificate record...");
-        const updateSuccess = await certificateService.updateCertificateUrl(
-          certificate.id,
-          uploadResult.url
+        const certificate = await certificateService.createCertificate(
+          certificateData
         );
 
-        if (!updateSuccess) {
-          throw new Error("Failed to update certificate with file URL");
+        if (!certificate) {
+          throw new Error("Failed to create certificate entry");
         }
       }
 
       setUploadProgress("Upload completed successfully!");
-      
+
       // Reset form and close dialog
       setTimeout(() => {
         resetForm();
         onClose();
         onUploadSuccess();
       }, 1500);
-
     } catch (error) {
       console.error("Upload error:", error);
       setError(error instanceof Error ? error.message : "Upload failed");
@@ -189,7 +191,8 @@ export function CertificateUploadDialog({
         <DialogHeader>
           <DialogTitle>Upload Certificate</DialogTitle>
           <DialogDescription>
-            Add a new certificate to your portfolio. Fill in the details and optionally upload the certificate file.
+            Add a new certificate to your portfolio. Fill in the details and
+            optionally upload the certificate file.
           </DialogDescription>
         </DialogHeader>
 
@@ -302,16 +305,17 @@ export function CertificateUploadDialog({
         </div>
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={handleClose}
-            disabled={uploading}
-          >
+          <Button variant="outline" onClick={handleClose} disabled={uploading}>
             Cancel
           </Button>
           <Button
             onClick={handleUpload}
-            disabled={uploading || !formData.title || !formData.issuer || !formData.issue_date}
+            disabled={
+              uploading ||
+              !formData.title ||
+              !formData.issuer ||
+              !formData.issue_date
+            }
           >
             {uploading ? "Uploading..." : "Upload Certificate"}
           </Button>

@@ -31,9 +31,10 @@ export function useStudent(): UseStudentResult {
 
     try {
       // If we have a Supabase user, try to fetch from database
-      if (supabaseUser && user.role === "student") {
-        const { data: studentData, error: studentError } = await studentOperations.getStudentByUserId(user.id);
-        
+      if (user && user.role === "student") {
+        const { data: studentData, error: studentError } =
+          await studentOperations.getStudentByUserId(user.id);
+
         if (studentError) {
           console.error("Error fetching student from database:", studentError);
         } else if (studentData) {
@@ -45,7 +46,7 @@ export function useStudent(): UseStudentResult {
 
       // Fallback to mock data for development/demo
       if (user.role === "student") {
-        const mockStudent = mockStudents.find(s => s.user_id === user.id);
+        const mockStudent = mockStudents.find((s) => s.user_id === user.id);
         if (mockStudent) {
           setStudent(mockStudent);
         } else {
