@@ -1,6 +1,7 @@
 # Supabase Setup Instructions
 
 ## 1. Create Supabase Project
+
 1. Go to [supabase.com](https://supabase.com) and create an account
 2. Click "New Project"
 3. Choose your organization
@@ -10,6 +11,7 @@
 7. Click "Create new project"
 
 ## 2. Get Your Credentials
+
 1. Go to your project dashboard
 2. Click "Settings" → "API"
 3. Copy the following:
@@ -18,6 +20,7 @@
    - **Service role key**: `eyJ...` (starts with eyJ, but different from anon key)
 
 ## 3. Update Environment Variables
+
 Open `.env.local` and replace the placeholder values:
 
 ```env
@@ -27,6 +30,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-actual-service-role-key
 ```
 
 ## 4. Set Up Database Schema
+
 1. In your Supabase dashboard, go to "SQL Editor"
 2. Click "New query"
 3. Copy the entire contents of `database/schema.sql`
@@ -34,14 +38,16 @@ SUPABASE_SERVICE_ROLE_KEY=your-actual-service-role-key
 5. Click "Run" to execute the schema
 
 This will create:
+
 - ✅ Users table
-- ✅ Students table  
+- ✅ Students table
 - ✅ Certificates table
 - ✅ Storage bucket for certificates
 - ✅ Row Level Security policies
 - ✅ Proper indexes and triggers
 
 ## 5. Test the Connection
+
 ```bash
 npm run dev
 ```
@@ -49,15 +55,17 @@ npm run dev
 Open your browser to `http://localhost:3000` and try logging in with the existing demo credentials:
 
 - **Admin**: `admin@university.edu` / `password`
-- **Faculty**: `prof.smith@university.edu` / `password`  
+- **Faculty**: `prof.smith@university.edu` / `password`
 - **Student**: `john.doe@university.edu` / `password`
 
 ## 6. How It Works Now
 
 ### Dual Authentication System
+
 The system now supports both:
 
 1. **Mock Authentication** (current/fallback):
+
    - Uses localStorage for session management
    - Hardcoded demo users for testing
    - Works without Supabase configuration
@@ -69,12 +77,15 @@ The system now supports both:
    - File upload capabilities
 
 ### Automatic Fallback
+
 - If Supabase is not configured (placeholder URLs), it uses mock auth
 - If Supabase fails, it falls back to mock auth
 - Your existing login system continues to work unchanged
 
 ### Database Operations
+
 Once Supabase is configured, you can:
+
 - Create real user accounts
 - Store student profiles in the database
 - Upload and manage certificates
@@ -111,7 +122,7 @@ The system now includes comprehensive database utilities in `lib/database.ts`:
 
 - ✅ Row Level Security (RLS) enabled
 - ✅ Role-based access policies
-- ✅ Secure file upload policies  
+- ✅ Secure file upload policies
 - ✅ Proper data isolation between users
 - ✅ Admin/Faculty elevated permissions
 
