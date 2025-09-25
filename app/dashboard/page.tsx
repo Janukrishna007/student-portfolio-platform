@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/lib/auth"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { StudentDashboard } from "@/components/dashboard/student-dashboard"
-import { FacultyDashboard } from "@/components/dashboard/faculty-dashboard"
-import { AdminDashboard } from "@/components/dashboard/admin-dashboard"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { StudentDashboard } from "@/components/dashboard/student-dashboard";
+import { FacultyDashboard } from "@/components/dashboard/faculty-dashboard";
+import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
 
 export default function DashboardPage() {
-  const { user, loading, logout } = useAuth()
-  const router = useRouter()
+  const { user, loading, logout } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/")
+      router.push("/");
     }
-  }, [user, loading, router])
+  }, [user, loading, router]);
 
   if (loading) {
     return (
@@ -27,29 +27,29 @@ export default function DashboardPage() {
           <p className="text-muted-foreground">Loading dashboard...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!user) {
-    return null
+    return null;
   }
 
   const renderDashboard = () => {
     switch (user.role) {
       case "student":
-        return <StudentDashboard />
+        return <StudentDashboard />;
       case "faculty":
-        return <FacultyDashboard />
+        return <FacultyDashboard />;
       case "admin":
-        return <AdminDashboard />
+        return <AdminDashboard />;
       default:
-        return <div>Invalid user role</div>
+        return <div>Invalid user role</div>;
     }
-  }
+  };
 
   // For student role, render without header/container
   if (user.role === "student") {
-    return <div className="min-h-screen">{renderDashboard()}</div>
+    return <div className="min-h-screen">{renderDashboard()}</div>;
   }
 
   // For other roles, keep the original layout
@@ -67,8 +67,8 @@ export default function DashboardPage() {
             <Button
               variant="outline"
               onClick={() => {
-                logout()
-                router.push("/")
+                logout();
+                router.push("/");
               }}
             >
               Sign Out
@@ -79,5 +79,5 @@ export default function DashboardPage() {
 
       <main className="container mx-auto px-4 py-8">{renderDashboard()}</main>
     </div>
-  )
+  );
 }

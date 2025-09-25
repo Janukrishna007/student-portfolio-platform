@@ -1,41 +1,68 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { useAuth } from "@/lib/auth"
-import type { Achievement, Student } from "@/lib/types"
-import { mockAchievements, mockStudents } from "@/lib/mock-data"
-import { Search, Bell, Calendar, ChevronLeft, ChevronRight, GraduationCap, LogOut, BarChart3, User, BookOpen, Trophy, Users, MessageSquare, Briefcase, Settings } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/lib/auth";
+import type { Achievement, Student } from "@/lib/types";
+import { mockAchievements, mockStudents } from "@/lib/mock-data";
+import {
+  Search,
+  Bell,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  GraduationCap,
+  LogOut,
+  BarChart3,
+  User,
+  BookOpen,
+  Trophy,
+  Users,
+  MessageSquare,
+  Briefcase,
+  Settings,
+} from "lucide-react";
 
 export function StudentDashboard() {
-  const { user, logout } = useAuth()
-  const [student, setStudent] = useState<Student | null>(null)
-  const [achievements, setAchievements] = useState<Achievement[]>([])
-  const [loading, setLoading] = useState(true)
+  const { user, logout } = useAuth();
+  const [student, setStudent] = useState<Student | null>(null);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Mock data loading - in real app, this would fetch from Supabase
-    const studentData = mockStudents.find((s) => s.user_id === user?.id)
-    const studentAchievements = mockAchievements.filter((a) => a.student_id === studentData?.id)
+    const studentData = mockStudents.find((s) => s.user_id === user?.id);
+    const studentAchievements = mockAchievements.filter(
+      (a) => a.student_id === studentData?.id
+    );
 
-    setStudent(studentData || null)
-    setAchievements(studentAchievements)
-    setLoading(false)
-  }, [user])
+    setStudent(studentData || null);
+    setAchievements(studentAchievements);
+    setLoading(false);
+  }, [user]);
 
   if (loading) {
-    return <div className="flex items-center justify-center h-64">Loading...</div>
+    return (
+      <div className="flex items-center justify-center h-64">Loading...</div>
+    );
   }
 
   if (!student) {
-    return <div className="text-center text-red-500">Student profile not found</div>
+    return (
+      <div className="text-center text-red-500">Student profile not found</div>
+    );
   }
 
-  const totalPoints = achievements.reduce((sum, achievement) => sum + achievement.points, 0)
-  const approvedAchievements = achievements.filter((a) => a.verification_status === "approved")
+  const totalPoints = achievements.reduce(
+    (sum, achievement) => sum + achievement.points,
+    0
+  );
+  const approvedAchievements = achievements.filter(
+    (a) => a.verification_status === "approved"
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -84,7 +111,10 @@ export function StudentDashboard() {
             </div>
           </nav>
 
-          <button onClick={logout} className="flex items-center text-white/80 hover:text-white transition-colors mt-auto">
+          <button
+            onClick={logout}
+            className="flex items-center text-white/80 hover:text-white transition-colors mt-auto"
+          >
             <LogOut className="w-5 h-5 mr-3" />
             <span className="text-sm">Logout</span>
           </button>
@@ -97,7 +127,10 @@ export function StudentDashboard() {
             <div className="flex items-center flex-1 max-w-md">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input placeholder="Search" className="pl-10 bg-white border-gray-200 rounded-lg h-10 text-sm" />
+                <Input
+                  placeholder="Search"
+                  className="pl-10 bg-white border-gray-200 rounded-lg h-10 text-sm"
+                />
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -107,16 +140,16 @@ export function StudentDashboard() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-xs">
-                    AI
-                  </span>
+                  <span className="text-white font-semibold text-xs">AI</span>
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900 text-sm">
                     Aleena Ida
                   </div>
                   <div className="text-xs text-gray-600">Student</div>
-                  <div className="text-xs text-gray-500">Marian Engineering College</div>
+                  <div className="text-xs text-gray-500">
+                    Marian Engineering College
+                  </div>
                 </div>
               </div>
             </div>
@@ -127,9 +160,15 @@ export function StudentDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="z-10">
-                  <p className="text-purple-100 mb-1 text-sm">September 4, 2023</p>
-                  <h1 className="text-2xl font-bold mb-2">Welcome back, Aleena!</h1>
-                  <p className="text-purple-100 text-sm">Always stay updated in your student portal</p>
+                  <p className="text-purple-100 mb-1 text-sm">
+                    September 4, 2023
+                  </p>
+                  <h1 className="text-2xl font-bold mb-2">
+                    Welcome back, Aleena!
+                  </h1>
+                  <p className="text-purple-100 text-sm">
+                    Always stay updated in your student portal
+                  </p>
                 </div>
                 <div className="relative">
                   {/* Decorative elements */}
@@ -155,7 +194,9 @@ export function StudentDashboard() {
               <Card className="shadow-sm">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-semibold">SGPA Trend</CardTitle>
+                    <CardTitle className="text-base font-semibold">
+                      SGPA Trend
+                    </CardTitle>
                     <span className="text-sm text-gray-600">CGPA : 9.0</span>
                   </div>
                 </CardHeader>
@@ -163,19 +204,25 @@ export function StudentDashboard() {
                   <div className="flex items-end justify-center h-32 gap-8">
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-16 bg-cyan-200 rounded-lg flex items-end justify-center pb-1">
-                        <span className="text-xs font-semibold text-gray-700">8.2</span>
+                        <span className="text-xs font-semibold text-gray-700">
+                          8.2
+                        </span>
                       </div>
                       <span className="text-xs text-gray-600 mt-2">S1</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-20 bg-cyan-300 rounded-lg flex items-end justify-center pb-1">
-                        <span className="text-xs font-semibold text-gray-700">8.7</span>
+                        <span className="text-xs font-semibold text-gray-700">
+                          8.7
+                        </span>
                       </div>
                       <span className="text-xs text-gray-600 mt-2">S2</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-24 bg-cyan-400 rounded-lg flex items-end justify-center pb-1">
-                        <span className="text-xs font-semibold text-white">9.2</span>
+                        <span className="text-xs font-semibold text-white">
+                          9.2
+                        </span>
                       </div>
                       <span className="text-xs text-gray-600 mt-2">S3</span>
                     </div>
@@ -195,8 +242,12 @@ export function StudentDashboard() {
               <Card className="shadow-sm">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-semibold">Time Table</CardTitle>
-                    <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 text-xs px-2 py-1">Monday</Badge>
+                    <CardTitle className="text-base font-semibold">
+                      Time Table
+                    </CardTitle>
+                    <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 text-xs px-2 py-1">
+                      Monday
+                    </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -227,10 +278,14 @@ export function StudentDashboard() {
               {/* Notice */}
               <Card className="shadow-sm">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold">Notice</CardTitle>
+                  <CardTitle className="text-base font-semibold">
+                    Notice
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-purple-600 text-sm">29 Sep 2025, Monday is a Holiday</p>
+                  <p className="text-purple-600 text-sm">
+                    29 Sep 2025, Monday is a Holiday
+                  </p>
                 </CardContent>
               </Card>
 
@@ -247,28 +302,36 @@ export function StudentDashboard() {
               {/* Deadlines */}
               <Card className="shadow-sm">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold">Deadlines</CardTitle>
+                  <CardTitle className="text-base font-semibold">
+                    Deadlines
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <Calendar className="w-4 h-4 text-purple-500" />
                       <div>
-                        <div className="font-medium text-sm">Biology Assignment</div>
+                        <div className="font-medium text-sm">
+                          Biology Assignment
+                        </div>
                         <div className="text-xs text-gray-500">29/9/2025</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <Calendar className="w-4 h-4 text-purple-500" />
                       <div>
-                        <div className="font-medium text-sm">Biology Assignment</div>
+                        <div className="font-medium text-sm">
+                          Biology Assignment
+                        </div>
                         <div className="text-xs text-gray-500">29/9/2025</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <Calendar className="w-4 h-4 text-purple-500" />
                       <div>
-                        <div className="font-medium text-sm">Biology Assignment</div>
+                        <div className="font-medium text-sm">
+                          Biology Assignment
+                        </div>
                         <div className="text-xs text-gray-500">29/9/2025</div>
                       </div>
                     </div>
@@ -280,13 +343,25 @@ export function StudentDashboard() {
               <Card className="shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs px-2 py-1">Web development</Badge>
-                    <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 text-xs px-2 py-1">UI/X</Badge>
-                    <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 text-xs px-2 py-1">Filmography</Badge>
-                    <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 text-xs px-2 py-1">Video Editing</Badge>
-                    <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 text-xs px-2 py-1">Painting</Badge>
+                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs px-2 py-1">
+                      Web development
+                    </Badge>
+                    <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 text-xs px-2 py-1">
+                      UI/X
+                    </Badge>
+                    <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 text-xs px-2 py-1">
+                      Filmography
+                    </Badge>
+                    <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 text-xs px-2 py-1">
+                      Video Editing
+                    </Badge>
+                    <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 text-xs px-2 py-1">
+                      Painting
+                    </Badge>
                   </div>
-                  <Button className="w-full bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-lg text-sm h-8">Edit Profile</Button>
+                  <Button className="w-full bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-lg text-sm h-8">
+                    Edit Profile
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -362,5 +437,5 @@ export function StudentDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }

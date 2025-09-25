@@ -170,3 +170,10 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+.login-background {
+  background-image: url("/images/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
