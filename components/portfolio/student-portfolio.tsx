@@ -1,10 +1,16 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/lib/auth";
+import { useStudent } from "@/hooks/use-student";
+import { certificateService } from "@/lib/certificate-service";
+import { CertificateUploadDialog } from "./certificate-upload-dialog";
+import type { Database } from "@/lib/supabase";
 import {
   Search,
   Bell,
@@ -12,13 +18,24 @@ import {
   Download,
   Upload,
   ExternalLink,
+  FileText,
+  Trash2,
+  Eye,
 } from "lucide-react";
+
+type Certificate = Database['public']['Tables']['certificates']['Row'];
 
 interface PortfolioProps {
   onBack: () => void;
 }
 
 export function StudentPortfolio({ onBack }: PortfolioProps) {
+  const { user } = useAuth();
+  const { student } = useStudent();
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [loadingCertificates, setLoadingCertificates] = useState(true);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
+
   const skills = [
     "UI/UX Design",
     "Graphic Design",
@@ -26,12 +43,72 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
     "Basic Front End Development (CSS, HTML, JavaScript)",
   ];
 
-  const certificates = [
-    "Google UX Design Certificate (Coursera)",
-    "Figma Essentials for UI Design",
-    "Introduction to Graphic Design (Coursera)",
-    "Introduction to Front End development (Coursera)",
-  ];
+  // Load certificates from database
+  useEffect(() => {
+    const loadCertificates = async () => {
+      if (!student?.id) return;
+      
+      setLoadingCertificates(true);
+      try {
+        const userCertificates = await certificateService.getCertificatesByStudent(student.id);
+        setCertificates(userCertificates);
+      } catch (error) {
+        console.error("Failed to load certificates:", error);
+      } finally {
+        setLoadingCertificates(false);
+      }
+    };
+
+    loadCertificates();
+  }, [student]);
+
+  const handleUploadSuccess = () => {
+    // Reload certificates after successful upload
+    const loadCertificates = async () => {
+      if (!student?.id) return;
+      
+      try {
+        const userCertificates = await certificateService.getCertificatesByStudent(student.id);
+        setCertificates(userCertificates);
+      } catch (error) {
+        console.error("Failed to reload certificates:", error);
+      }
+    };
+
+    loadCertificates();
+  };
+
+  const handleCertificateView = (certificate: Certificate) => {
+    if (certificate.certificate_url) {
+      window.open(certificate.certificate_url, '_blank');
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'verified':
+        return <Badge className="bg-green-100 text-green-700 text-xs">Verified</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-100 text-red-700 text-xs">Rejected</Badge>;
+      default:
+        return <Badge className="bg-yellow-100 text-yellow-700 text-xs">Pending</Badge>;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'academic':
+        return 'text-blue-600';
+      case 'professional':
+        return 'text-purple-600';
+      case 'skill':
+        return 'text-green-600';
+      case 'achievement':
+        return 'text-orange-600';
+      default:
+        return 'text-gray-600';
+    }
+  };
 
   const achievements = [
     "Winner - College UI/UX Design Hackathon",
@@ -219,28 +296,77 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
                   variant="outline"
                   size="sm"
                   className="flex items-center gap-2"
+                  onClick={() => setShowUploadDialog(true)}
                 >
                   <Upload className="w-4 h-4" />
                   Upload
                 </Button>
               </div>
-              <div className="space-y-3">
-                {certificates.map((cert, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+              
+              {loadingCertificates ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-sm text-gray-500">Loading certificates...</div>
+                </div>
+              ) : certificates.length === 0 ? (
+                <div className="text-center py-8">
+                  <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm text-gray-500 mb-4">No certificates uploaded yet</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowUploadDialog(true)}
+                    className="flex items-center gap-2"
                   >
-                    <span className="text-sm text-gray-700 flex-1">{cert}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-gray-500 hover:text-gray-700"
+                    <Upload className="w-4 h-4" />
+                    Upload Your First Certificate
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {certificates.map((cert) => (
+                    <div
+                      key={cert.id}
+                      className="flex items-start justify-between py-3 border-b border-gray-100 last:border-0"
                     >
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium text-sm text-gray-900 truncate">
+                            {cert.title}
+                          </h4>
+                          {getStatusBadge(cert.status)}
+                        </div>
+                        <p className="text-xs text-gray-600 mb-1">
+                          {cert.issuer} • {new Date(cert.issue_date).toLocaleDateString()}
+                        </p>
+                        <p className={`text-xs font-medium capitalize ${getCategoryColor(cert.category)}`}>
+                          {cert.category}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 ml-2">
+                        {cert.certificate_url && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-gray-500 hover:text-gray-700 h-8 w-8 p-0"
+                            onClick={() => handleCertificateView(cert)}
+                            title="View certificate"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-gray-500 hover:text-blue-700 h-8 w-8 p-0"
+                          title="Open details"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -262,6 +388,16 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
           </Card>
         </div>
       </div>
+
+      {/* Certificate Upload Dialog */}
+      {student && (
+        <CertificateUploadDialog
+          isOpen={showUploadDialog}
+          onClose={() => setShowUploadDialog(false)}
+          studentId={student.id}
+          onUploadSuccess={handleUploadSuccess}
+        />
+      )}
     </div>
   );
 }

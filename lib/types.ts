@@ -62,6 +62,19 @@ export interface Achievement {
   updated_at: string
 }
 
+export interface Certificate {
+  id: string
+  student_id: string
+  title: string
+  issuer: string
+  issue_date: string
+  certificate_url?: string
+  category: "academic" | "professional" | "skill" | "achievement"
+  status: "pending" | "verified" | "rejected"
+  created_at: string
+  updated_at: string
+}
+
 export interface Portfolio {
   id: string
   student_id: string
