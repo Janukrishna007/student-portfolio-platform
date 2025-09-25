@@ -47,6 +47,12 @@ export default function DashboardPage() {
     }
   }
 
+  // For student role, render without header/container
+  if (user.role === "student") {
+    return <div className="min-h-screen">{renderDashboard()}</div>
+  }
+
+  // For other roles, keep the original layout
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
