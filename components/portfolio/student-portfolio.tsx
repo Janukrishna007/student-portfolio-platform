@@ -5,13 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  Search, 
-  Bell, 
-  Edit, 
-  Download, 
+import {
+  Search,
+  Bell,
+  Edit,
+  Download,
   Upload,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 
 interface PortfolioProps {
@@ -21,44 +21,44 @@ interface PortfolioProps {
 export function StudentPortfolio({ onBack }: PortfolioProps) {
   const skills = [
     "UI/UX Design",
-    "Graphic Design", 
+    "Graphic Design",
     "Team collaboration",
-    "Basic Front End Development (CSS, HTML, JavaScript)"
+    "Basic Front End Development (CSS, HTML, JavaScript)",
   ];
 
   const certificates = [
     "Google UX Design Certificate (Coursera)",
     "Figma Essentials for UI Design",
     "Introduction to Graphic Design (Coursera)",
-    "Introduction to Front End development (Coursera)"
+    "Introduction to Front End development (Coursera)",
   ];
 
   const achievements = [
     "Winner - College UI/UX Design Hackathon",
     "Designed the official event poster for Tech Fest 2024",
     "Recognized as 'Best Creative Designer' at Annual College Fest",
-    "Recognized as 'Techie of the Year (2023)' by Department"
+    "Recognized as 'Techie of the Year (2023)' by Department",
   ];
 
   const experiences = [
-    { 
+    {
       role: "Outreach Ninja",
       company: "Friends of Figma, Thiruvananthapuram",
       period: "Apr 2023 - Present • 5 mos",
-      type: "volunteer"
+      type: "volunteer",
     },
     {
-      role: "Design Lead", 
+      role: "Design Lead",
       company: "Mendfinans club MCE",
       period: "Jul 2024 - Present • 1 yr 3 mos",
-      type: "leadership"
+      type: "leadership",
     },
     {
       role: "GDSC MCE",
       company: "",
       period: "1 yr 3 mos",
-      type: "membership"
-    }
+      type: "membership",
+    },
   ];
 
   return (
@@ -130,9 +130,10 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
                 <div>
                   <h3 className="text-lg font-semibold mb-2">About</h3>
                   <p className="text-purple-100 text-sm leading-relaxed">
-                    A passionate and creative individual with a strong interest in design, 
-                    technology, and innovation. Enthusiastic about blending creativity with 
-                    functionality to deliver impactful solutions.
+                    A passionate and creative individual with a strong interest
+                    in design, technology, and innovation. Enthusiastic about
+                    blending creativity with functionality to deliver impactful
+                    solutions.
                   </p>
                 </div>
                 <div>
@@ -190,9 +191,13 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
                       <div className="w-6 h-6 bg-gray-300 rounded"></div>
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm text-gray-900">{exp.role}</h4>
+                      <h4 className="font-medium text-sm text-gray-900">
+                        {exp.role}
+                      </h4>
                       {exp.company && (
-                        <p className="text-sm text-gray-600 mb-1">{exp.company}</p>
+                        <p className="text-sm text-gray-600 mb-1">
+                          {exp.company}
+                        </p>
                       )}
                       <p className="text-xs text-gray-500">{exp.period}</p>
                     </div>
@@ -210,16 +215,27 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Certificates</h3>
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
                   <Upload className="w-4 h-4" />
                   Upload
                 </Button>
               </div>
               <div className="space-y-3">
                 {certificates.map((cert, index) => (
-                  <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                  >
                     <span className="text-sm text-gray-700 flex-1">{cert}</span>
-                    <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-500 hover:text-gray-700"
+                    >
                       <ExternalLink className="w-4 h-4" />
                     </Button>
                   </div>
@@ -231,7 +247,9 @@ export function StudentPortfolio({ onBack }: PortfolioProps) {
           {/* Achievements and Awards */}
           <Card className="shadow-sm">
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Achievements and Awards</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Achievements and Awards
+              </h3>
               <div className="space-y-3">
                 {achievements.map((achievement, index) => (
                   <div key={index} className="flex items-start gap-3">

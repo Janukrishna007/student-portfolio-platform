@@ -45,65 +45,62 @@ export function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[650px]">
+    <div className="w-full max-w-5xl mx-auto">
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
           {/* Left side - Login Form */}
-          <div className="p-8 lg:p-10 flex flex-col justify-center bg-white">
+          <div className="p-8 lg:p-12 flex flex-col justify-center bg-white">
             {/* Logo */}
-            <div className="mb-8">
-              <div className="w-16 h-16 mb-8">
+            <div className="mb-6">
+              <div className="w-12 h-12 mb-6">
                 <Image
                   src="/images/logo.png"
                   alt="Logo"
-                  width={64}
-                  height={64}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-contain"
                 />
               </div>
 
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 Welcome Back
               </h1>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-sm mb-6">
                 Please enter login details below
               </p>
             </div>
 
             {/* Demo Credentials Quick Access */}
-            <div className="mb-6">
+            <div className="mb-4">
               <p className="text-sm text-gray-600 mb-3">Quick Demo Access:</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-2">
                 <Button
                   type="button"
                   onClick={fillAdmin}
-                  className="text-xs px-3 py-1 h-auto bg-red-500 hover:bg-red-600 text-white rounded-md"
+                  className="text-xs px-3 py-1.5 h-auto bg-red-500 hover:bg-red-600 text-white rounded-md font-medium"
                 >
                   Admin
                 </Button>
                 <Button
                   type="button"
                   onClick={fillFaculty}
-                  className="text-xs px-3 py-1 h-auto bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+                  className="text-xs px-3 py-1.5 h-auto bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium"
                 >
                   Faculty
                 </Button>
                 <Button
                   type="button"
                   onClick={fillStudent}
-                  className="text-xs px-3 py-1 h-auto bg-green-500 hover:bg-green-600 text-white rounded-md"
+                  className="text-xs px-3 py-1.5 h-auto bg-green-500 hover:bg-green-600 text-white rounded-md font-medium"
                 >
                   Student
                 </Button>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="text-gray-700 font-medium text-sm block"
-                >
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <label htmlFor="email" className="text-gray-700 text-sm block">
                   Email
                 </label>
                 <Input
@@ -112,15 +109,15 @@ export function LoginForm() {
                   placeholder=""
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base"
+                  className="h-11 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                   required
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label
                   htmlFor="password"
-                  className="text-gray-700 font-medium text-sm block"
+                  className="text-gray-700 text-sm block"
                 >
                   Password
                 </label>
@@ -130,15 +127,15 @@ export function LoginForm() {
                   placeholder=""
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base"
+                  className="h-11 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                   required
                 />
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end pt-2">
                 <button
                   type="button"
-                  className="text-purple-600 hover:text-purple-700 font-medium text-sm"
+                  className="text-purple-600 hover:text-purple-700 text-sm"
                 >
                   Forget Password?
                 </button>
@@ -152,29 +149,35 @@ export function LoginForm() {
 
               <Button
                 type="submit"
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 text-base"
+                className="w-full h-11 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl text-sm mt-6"
                 disabled={loading}
               >
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
 
-            <div className="mt-8 text-center">
+            <div className="mt-6 text-center">
               <p className="text-gray-600 text-sm">
                 {"Don't have an account? "}
-                <button className="text-purple-600 hover:text-purple-700 font-semibold">
+                <button className="text-purple-600 hover:text-purple-700 font-medium">
                   Sign up
                 </button>
               </p>
             </div>
 
             {/* Test Credentials - Collapsible */}
-            <div className="mt-6">
+            <div className="mt-4">
               <details className="group">
-                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
-                  View Test Credentials
+                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 list-none flex items-center">
+                  <span className="mr-2">▶</span>
+                  <span className="group-open:hidden">
+                    View Test Credentials
+                  </span>
+                  <span className="hidden group-open:inline">
+                    Hide Test Credentials
+                  </span>
                 </summary>
-                <div className="mt-3 space-y-2 text-xs text-gray-600 bg-gray-50 p-4 rounded-lg">
+                <div className="mt-3 space-y-2 text-xs text-gray-600 bg-gray-50 p-3 rounded-lg border">
                   <div className="space-y-1">
                     <p className="font-semibold text-red-600">Admin:</p>
                     <p>admin@university.edu / password</p>
