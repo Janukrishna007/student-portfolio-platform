@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,12 +26,14 @@ import {
   Briefcase,
   Settings,
 } from "lucide-react";
+import { StudentPortfolio } from "@/components/portfolio/student-portfolio";
 
 export function StudentDashboard() {
   const { user, logout } = useAuth();
   const [student, setStudent] = useState<Student | null>(null);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeView, setActiveView] = useState<'dashboard' | 'portfolio' | 'academics' | 'co-curricular' | 'extra-curricular' | 'feedback' | 'career' | 'settings'>('dashboard');
 
   useEffect(() => {
     // Mock data loading - in real app, this would fetch from Supabase
@@ -70,42 +73,104 @@ export function StudentDashboard() {
         {/* Left Sidebar */}
         <div className="w-64 bg-gradient-to-b from-purple-600 to-purple-700 min-h-screen p-6 flex flex-col">
           <div className="mb-8">
-            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-6">
-              <GraduationCap className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-6 p-3">
+              <Image
+                src="/images/logo.png"
+                alt="Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
 
           {/* Navigation Menu */}
           <nav className="flex-1 space-y-1">
-            <div className="flex items-center text-white text-sm font-medium py-3 px-4 bg-white/20 rounded-lg">
+            <div 
+              className={`flex items-center text-sm font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'dashboard' 
+                  ? 'text-white bg-white/20' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('dashboard')}
+            >
               <BarChart3 className="w-4 h-4 mr-3" />
               Dashboard
             </div>
-            <div className="flex items-center text-white/70 text-sm py-3 px-4 hover:bg-white/10 rounded-lg transition-colors cursor-pointer">
+            <div 
+              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'portfolio' 
+                  ? 'text-white bg-white/20 font-medium' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('portfolio')}
+            >
               <User className="w-4 h-4 mr-3" />
               Portfolio
             </div>
-            <div className="flex items-center text-white/70 text-sm py-3 px-4 hover:bg-white/10 rounded-lg transition-colors cursor-pointer">
+            <div 
+              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'academics' 
+                  ? 'text-white bg-white/20 font-medium' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('academics')}
+            >
               <BookOpen className="w-4 h-4 mr-3" />
               Academics
             </div>
-            <div className="flex items-center text-white/70 text-sm py-3 px-4 hover:bg-white/10 rounded-lg transition-colors cursor-pointer">
+            <div 
+              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'co-curricular' 
+                  ? 'text-white bg-white/20 font-medium' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('co-curricular')}
+            >
               <Trophy className="w-4 h-4 mr-3" />
               Co-curricular
             </div>
-            <div className="flex items-center text-white/70 text-sm py-3 px-4 hover:bg-white/10 rounded-lg transition-colors cursor-pointer">
+            <div 
+              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'extra-curricular' 
+                  ? 'text-white bg-white/20 font-medium' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('extra-curricular')}
+            >
               <Users className="w-4 h-4 mr-3" />
               Extra curricular
             </div>
-            <div className="flex items-center text-white/70 text-sm py-3 px-4 hover:bg-white/10 rounded-lg transition-colors cursor-pointer">
+            <div 
+              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'feedback' 
+                  ? 'text-white bg-white/20 font-medium' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('feedback')}
+            >
               <MessageSquare className="w-4 h-4 mr-3" />
               Feedback
             </div>
-            <div className="flex items-center text-white/70 text-sm py-3 px-4 hover:bg-white/10 rounded-lg transition-colors cursor-pointer">
+            <div 
+              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'career' 
+                  ? 'text-white bg-white/20 font-medium' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('career')}
+            >
               <Briefcase className="w-4 h-4 mr-3" />
               Career
             </div>
-            <div className="flex items-center text-white/70 text-sm py-3 px-4 hover:bg-white/10 rounded-lg transition-colors cursor-pointer">
+            <div 
+              className={`flex items-center text-sm py-3 px-4 rounded-lg transition-colors cursor-pointer ${
+                activeView === 'settings' 
+                  ? 'text-white bg-white/20 font-medium' 
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+              onClick={() => setActiveView('settings')}
+            >
               <Settings className="w-4 h-4 mr-3" />
               Settings
             </div>
@@ -122,38 +187,43 @@ export function StudentDashboard() {
 
         {/* Main Content */}
         <div className="flex-1 p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center flex-1 max-w-md">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search"
-                  className="pl-10 bg-white border-gray-200 rounded-lg h-10 text-sm"
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Bell className="w-5 h-5 text-gray-600" />
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-xs">AI</span>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900 text-sm">
-                    Aleena Ida
-                  </div>
-                  <div className="text-xs text-gray-600">Student</div>
-                  <div className="text-xs text-gray-500">
-                    Marian Engineering College
+          {/* Conditional Content Rendering */}
+          {activeView === 'portfolio' ? (
+            <StudentPortfolio onBack={() => setActiveView('dashboard')} />
+          ) : (
+            <>
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center flex-1 max-w-md">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search"
+                      className="pl-10 bg-white border-gray-200 rounded-lg h-10 text-sm"
+                    />
                   </div>
                 </div>
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <Bell className="w-5 h-5 text-gray-600" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                      <span className="text-white font-semibold text-xs">AI</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900 text-sm">
+                        Aleena Ida
+                      </div>
+                      <div className="text-xs text-gray-600">Student</div>
+                      <div className="text-xs text-gray-500">
+                        Marian Engineering College
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
           {/* Welcome Banner */}
           <Card className="mb-6 bg-gradient-to-r from-purple-500 via-purple-600 to-pink-500 border-0 text-white overflow-hidden relative">
@@ -434,6 +504,8 @@ export function StudentDashboard() {
               </Card>
             </div>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>

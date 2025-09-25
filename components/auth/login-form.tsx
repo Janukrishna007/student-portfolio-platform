@@ -45,9 +45,9 @@ export function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[650px]">
           {/* Left side - Login Form */}
           <div className="p-8 lg:p-10 flex flex-col justify-center bg-white">
             {/* Logo */}
